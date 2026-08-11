@@ -53,7 +53,7 @@ async function signIn(req, res) {
           avatar: newUser.avatar,
         }),
         "EX",
-        24 * 60 * 60 * 1000,
+        24 * 60 * 60,
       );
 
       return res.status(201).json({
@@ -81,7 +81,7 @@ async function signIn(req, res) {
         avatar: user.avatar,
       }),
       "EX",
-      24 * 60 * 60 * 1000,
+      24 * 60 * 60,
     );
 
     return res.status(200).json({
@@ -96,12 +96,13 @@ async function signIn(req, res) {
 
 async function signOut(req, res) {
   try {
-    const sessionID = req.cookies.sessionID;
+    const sessionID = req.cookies?.sessionID;
     // console.error(req.cookies);
     // console.error(req.cookies.sessionID);
     // console.error(req.headers);
     // console.error(req.cookies);
     await redis.del(`sessionId-${sessionID}`);
+    res.clearCookie("sessionID");
     return res.status(200).json({
       message: "User logout successfully",
     });
